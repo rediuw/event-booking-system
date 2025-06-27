@@ -1,0 +1,66 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<h2>Dashboard</h2>
+<h4>Welcome, {{ request.user.username }}</h4>
+<p>Email: {{ request.user.email }}</p>
+<p>Total Bookings: {{ upcoming_bookings|length|add:past_bookings|length }}</p>
+<hr>
+
+<h3>Upcoming Bookings</h3>
+{% if upcoming_bookings %}
+<table>
+    <tr><th>Event</th><th>Date</th><th>Tickets</th><th>Action</th></tr>
+    {% for booking in upcoming_bookings %}
+    <tr>
+        <td>{{ booking.event.title }}</td>
+        <td>{{ booking.event.date }}</td>
+        <td>{{ booking.tickets_booked }}</td>
+        <td>
+            <form action="{% url 'cancel_booking' booking.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Cancel</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No upcoming bookings.</p>
+{% endif %}
+
+<h3>Available Events to Book</h3>
+{% if available_events %}
+<ul>
+    {% for event in available_events %}
+    <li>
+        <strong>{{ event.title }}</strong> - {{ event.date }} -
+        {{ event.available_tickets }} tickets left
+        <form action="{% url 'book_event' event.id %}" method="post">
+            {% csrf_token %}
+            <input type="number" name="tickets_booked" min="1" max="{{ event.available_tickets }}" value="1" required>
+            <button type="submit">Book</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No events available to book at the moment.</p>
+{% endif %}
+
+<h3>Past Bookings</h3>
+{% if past_bookings %}
+<table>
+    <tr><th>Event</th><th>Date</th><th>Tickets</th></tr>
+    {% for booking in past_bookings %}
+    <tr>
+        <td>{{ booking.event.title }}</td>
+        <td>{{ booking.event.date }}</td>
+        <td>{{ booking.tickets_booked }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No past bookings.</p>
+{% endif %}
+{% endblock %}

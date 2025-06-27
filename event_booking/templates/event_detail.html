@@ -1,0 +1,19 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<h2>{{ event.title }}</h2>
+<p>Date: {{ event.date }}</p>
+<p>Available Tickets: {{ event.available_tickets }}</p>
+
+{% if user.is_authenticated %}
+    <form action="{% url 'book_event' event.id %}" method="post">
+        {% csrf_token %}
+        <label for="tickets">Number of Tickets:</label>
+        <input type="number" name="tickets_booked" min="1" max="{{ event.available_tickets }}" required>
+        <button type="submit">Book Now</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to book this event.</p>
+{% endif %}
+
+{% endblock %}
