@@ -17,12 +17,3 @@ This is a university-level **Event Booking System** built with **Django** and **
 - 🔐 JWT authentication endpoints for frontend/mobile integration
 - 📦 REST API with Django REST Framework
 
----
-
-## 🚀 Getting Started
-
-### 1. Clone the project
-
-```bash
-git clone https://github.com/rediuw/event-booking-system.git
-cd event-booking-system
